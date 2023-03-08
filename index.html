@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+	<script>
+		$(function() {
+			$("#btnSubmit").click(function() {
+				let headcount = $("#inputHeadCount").val();
+				if (!isNaN(headcount) && headcount > 0) {
+					proceedCardDistribution(headcount);
+				} else {
+					$("#inputHeadCount").val("");
+					$(".cardList").html("");
+					alert("Input value does not exist or value is invalid");
+				}
+			});
+		});
+		
+		function proceedCardDistribution(headcount) {
+			var arrayCardType = ["D", "C", "H", "S"]; //Diamond, Club, Heart, Spade
+			var arrayCardNum = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K"];
+			var arrayHeadCount = []; 
+			
+			var distributionList = "";
+			for (var i=0; i<arrayCardType.length; i++) {
+				for (var c=0; c<arrayCardNum.length; c++) {
+					// assigning card to random person
+					try {
+						var randomHeadcount = Math.floor(Math.random() * ((headcount-1) - 0 + 1) + 0);
+						if (arrayHeadCount[randomHeadcount] === undefined) {
+							arrayHeadCount[randomHeadcount] = arrayCardType[i] + "-" + arrayCardNum[c];
+						} else {
+							arrayHeadCount[randomHeadcount] += "," + arrayCardType[i] + "-" + arrayCardNum[c];
+						}
+					}
+					catch(err) {
+						$("#inputHeadCount").val("");
+						$(".cardList").html("");
+						alert("Irregularity occurred");
+					}
+				}
+			}
+			
+			// print out distribution list
+			for (var i=0; i<headcount; i++) {
+				distributionList += "<p>" + (arrayHeadCount[i] !== undefined ? arrayHeadCount[i] : "NO CARDS") + "</p>";
+			}
+			$(".cardList").html(distributionList);
+		}
+	</script>
+</head>
+<body>
+	<input type="text" id="inputHeadCount" />
+	<input type="submit" id="btnSubmit" value="Submit" />
+	
+	<p>Card Distributed:</p>
+	<div class="cardList"></div>
+</body>
+</html>
